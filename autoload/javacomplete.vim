@@ -106,7 +106,10 @@ let s:cache = {}    " FQN -> member list, e.g. {'java.lang.StringBuffer': classi
 let s:files = {}    " source file path -> properties, e.g. {filekey: {'unit': compilationUnit, 'changedtick': tick, }}
 let s:history = {}    " 
 let g:nailgun_started = 0
-let g:javacomplete_ng = 'ng'    " nailgun binary name (on some systems this may be ng-nailgun)
+
+if !exists("g:javacomplete_ng")
+	let g:javacomplete_ng = 'ng'    " nailgun binary name (on some systems this may be ng-nailgun)
+endif
 
 " FindStart function for completion {{{1
 function! s:FindStart()

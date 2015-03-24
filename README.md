@@ -43,6 +43,12 @@ You will also need this:
 let g:nailgun_port='2113'
 ```
 
+You may need this, in case your nailgun client isn't `ng`:
+
+```
+let g:javacomplete_ng='ng-nailgun'
+```
+
 GoToDefinition example keybind:
 
     <leader>b :call javacomplete#GoToDefinition()<CR>
