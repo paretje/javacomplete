@@ -3,7 +3,7 @@ javacomplete
 
 Java omni-completion for Vim 7.x
 
-Starting point of the projec is: 
+Starting point of the project is: 
 * https://github.com/VictorDenisov/javacomplete, by Victor Denisov, which in turn is started by 
 * http://www.vim.org/scripts/script.php?script_id=1785, created by Mr. Fang Cheng. 
 
