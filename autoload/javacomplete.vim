@@ -110,6 +110,9 @@ let g:nailgun_started = 0
 if !exists("g:javacomplete_ng")
 	let g:javacomplete_ng = 'ng'    " nailgun binary name (on some systems this may be ng-nailgun)
 endif
+if !exists("g:javacomplete_methods_paren")
+	let g:javacomplete_methods_paren = 1    " add paren after method name
+endif
 
 " FindStart function for completion {{{1
 function! s:FindStart()
@@ -2867,7 +2870,7 @@ fu! s:DoGetFieldList(fields)
 endfu
 
 fu! s:DoGetMethodList(methods, ...)
-    let paren = a:0 == 0 || !a:1 ? '(' : ''
+    let paren = g:javacomplete_methods_paren && (a:0 == 0 || !a:1) ? '(' : ''
     let s = ''
     for method in a:methods
         let s .= "{'kind':'" . (s:IsStatic(method.m) ? "M" : "m") . "','word':'" . method.n . paren . "','abbr':'" . method.n . "()','menu':'" . method.d . "','dup':'1'},"
