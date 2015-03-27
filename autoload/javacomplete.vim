@@ -2396,7 +2396,10 @@ endfu
 
 " Function to run VimTool                        {{{2
 fu! s:RunVimTool(option, args, log)
-    let cmd = g:javacomplete_ng . ' org.vimsense.VimTool --nailgun-port ' . g:nailgun_port . ' -sources ' . javacomplete#GetSourcePath() . ' -classes ' . s:GetClassPath() . ' ' . a:option . ' ' . a:args . ''
+    let sources = javacomplete#GetSourcePath()
+    let classes = s:GetClassPath()
+    let paths = (sources != '' ? ' -sources ' . sources : '') . (classes != ':' ? ' -classes ' . classes : '')
+    let cmd = g:javacomplete_ng . ' org.vimsense.VimTool --nailgun-port ' . g:nailgun_port . paths . ' ' . a:option . ' ' . a:args . ''
     return s:System(cmd, a:log)
 endfu
 
