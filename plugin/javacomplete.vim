@@ -8,6 +8,7 @@ function! s:initialize()
   command! -bang -narg=0 JavaCompleteGoToDefinition call javacomplete#GoToDefinition()
   command! -bang -narg=0 JavaCompleteRestartWithFolder call javacomplete#RestartWithFolder()
   command! -bang -narg=0 JavaCompleteRestart call javacomplete#Restart()
+  command! -bang -narg=0 JavaCompleteReinitialize call javacomplete#Reinitialize()
   command! -bang -narg=0 JavaCompleteReplaceWithImport call javacomplete#ReplaceWithImport()
   command! -range -bang -narg=0 JavaCompleteSortImports :<line1>,<line2>call javacomplete#SortImports()
 endfunction

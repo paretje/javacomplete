@@ -254,6 +254,12 @@ func! s:EditExisting(fname, command)
     redraw
 endfunc
 
+function! javacomplete#Reinitialize()
+    call javacomplete#StartServer()
+    call s:RunVimTool('-i', '', '')
+    let s:cache = {}
+endfunc
+
 function! javacomplete#ReindexAllSources()
     call javacomplete#StartServer()
     call s:RunVimTool('-reindex', '', '')
