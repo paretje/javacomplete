@@ -535,7 +535,7 @@ fun javacomplete#AddImport()
 
     if !exists('import')
         echoerr "Couldn't find FQN of " . cur_class
-    elseif ! fqn =~ '^' . s:GetPackageName() . '.'
+    elseif !(import =~ '^' . s:GetPackageName() . '\.')
         call s:CheckAndAddImport(import)
     endif
 endf
