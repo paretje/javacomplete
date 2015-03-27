@@ -518,6 +518,28 @@ func! s:CheckAndAddImport(cls) "{{{2
     return s:AddImport(a:cls)
 endf
 
+fun javacomplete#AddImport()
+    let cur_class = expand("<cword>")
+    " we need the FQN of the class
+    " the argument -n returns the FQN of classes completing our class
+    let res = s:RunVimTool('-n', '-class ' . cur_class, 'getclassnamepiece')
+    let results = eval(res)
+
+    " we want an exact match
+    for fqn in results
+        if fqn =~ '\.' . cur_class . '$'
+            let import=fqn
+            break
+        endif
+    endfor
+
+    if !exists('import')
+        echoerr "Couldn't find FQN of " . cur_class
+    elseif ! fqn =~ '^' . s:GetPackageName() . '.'
+        call s:CheckAndAddImport(import)
+    endif
+endf
+
 func! javacomplete#ReplaceWithImport() "{{{2
         let l:line = line('.')
 	let l:column = col('.')
