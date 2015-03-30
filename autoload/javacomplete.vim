@@ -408,19 +408,7 @@ endf
 function! javacomplete#StartServer()
     if g:nailgun_started == 0
         if !exists("g:nailgun_port")
-            call s:Trace("Find nailgun port!!!!!!!!!")
-            " find the first open nailgun_port, starting from the first one
-            let l:found_nailgun_port = 0
-            let l:tmp_try = g:first_nailgun_port
-            while l:found_nailgun_port == 0
-                call s:Trace("Try nailgun port: " . string(l:tmp_try))
-                let l:unused = system("nc -z 127.0.0.1 " . string(l:tmp_try))
-                if v:shell_error " FFFOUND !!!
-                    let l:found_nailgun_port = l:tmp_try
-                endif
-                let l:tmp_try = l:tmp_try + 1
-            endwhile
-            let g:nailgun_port = l:found_nailgun_port
+            echoerr "javacomplete error: g:nailgun_port hasn't been set"
         endif
 
         augroup javacomplete
