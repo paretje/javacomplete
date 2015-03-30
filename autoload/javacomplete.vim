@@ -113,6 +113,9 @@ endif
 if !exists("g:javacomplete_methods_paren")
 	let g:javacomplete_methods_paren = 1    " add paren after method name
 endif
+if !exists("g:javacomplete_methods_paren_noargs_close")
+	let g:javacomplete_methods_paren_noargs_close = 1    " close paren when there are no arguments
+endif
 
 " FindStart function for completion {{{1
 function! s:FindStart()
@@ -2895,7 +2898,11 @@ fu! s:DoGetMethodList(methods, ...)
     let paren = g:javacomplete_methods_paren && (a:0 == 0 || !a:1) ? '(' : ''
     let s = ''
     for method in a:methods
-        let s .= "{'kind':'" . (s:IsStatic(method.m) ? "M" : "m") . "','word':'" . method.n . paren . "','abbr':'" . method.n . "()','menu':'" . method.d . "','dup':'1'},"
+        let close_paren = ''
+        if g:javacomplete_methods_paren_noargs_close && method.d =~ '()$'
+            let close_paren = ')'
+        endif
+        let s .= "{'kind':'" . (s:IsStatic(method.m) ? "M" : "m") . "','word':'" . method.n . paren . close_paren . "','abbr':'" . method.n . "()','menu':'" . method.d . "','dup':'1'},"
     endfor
     return s
 endfu
