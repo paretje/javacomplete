@@ -275,6 +275,7 @@ endfunc
 function! javacomplete#ReindexFile()
     let fname = expand("%:p")
     call s:RunVimTool('-reindex', '-file ' . fname, 's:SearchStaticImports in Batch')
+    let s:cache = {}
 endfunc
 
 function! javacomplete#GoToDefinition()
@@ -395,40 +396,39 @@ function! javacomplete#LoadConfig(reset)
 endf
 
 function! javacomplete#Restart()
-    if !exists("g:nailgun_port")
-        call s:Trace("Find nailgun port!!!!!!!!!")
-        " find the first open nailgun_port, starting from the first one
-        let l:found_nailgun_port = 0
-        let l:tmp_try = g:first_nailgun_port
-        while l:found_nailgun_port == 0
-            call s:Trace("Try nailgun port: " . string(l:tmp_try))
-            let l:unused = system("/usr/local/bin/nc -z 127.0.0.1 " . string(l:tmp_try))
-            if v:shell_error " FFFOUND !!!
-            	let l:found_nailgun_port = l:tmp_try
-            endif
-            let l:tmp_try = l:tmp_try + 1
-        endwhile
-        let g:nailgun_port = l:found_nailgun_port
-    endif
-    augroup javacomplete
-        autocmd!
-        " attach events
-        autocmd! javacomplete VimLeave * call javacomplete#StopServer()
-        " attach events
-        autocmd! javacomplete BufWritePost *.java call javacomplete#ReindexFile()
-    augroup END
-
-    call s:System(g:javacomplete_ng . " --nailgun-port " . g:nailgun_port . " ng-stop", "Complete")
-    let g:nailgun_started = 0
+    call javacomplete#StopServer()
     call javacomplete#StartServer()
 endf
 
 function! javacomplete#StopServer()
     call s:System(g:javacomplete_ng . " --nailgun-port " . g:nailgun_port . " ng-stop", "Complete")
+    let g:nailgun_started = 0
 endf
 
 function! javacomplete#StartServer()
     if g:nailgun_started == 0
+        if !exists("g:nailgun_port")
+            call s:Trace("Find nailgun port!!!!!!!!!")
+            " find the first open nailgun_port, starting from the first one
+            let l:found_nailgun_port = 0
+            let l:tmp_try = g:first_nailgun_port
+            while l:found_nailgun_port == 0
+                call s:Trace("Try nailgun port: " . string(l:tmp_try))
+                let l:unused = system("nc -z 127.0.0.1 " . string(l:tmp_try))
+                if v:shell_error " FFFOUND !!!
+                    let l:found_nailgun_port = l:tmp_try
+                endif
+                let l:tmp_try = l:tmp_try + 1
+            endwhile
+            let g:nailgun_port = l:found_nailgun_port
+        endif
+
+        augroup javacomplete
+            autocmd!
+            autocmd! javacomplete VimLeave * call javacomplete#StopServer()
+            autocmd! javacomplete BufWritePost *.java call javacomplete#ReindexFile()
+        augroup END
+
         let classfile = globpath(&rtp, 'java/target/java_vim_sense-1.0-jar-with-dependencies.jar')
         call s:Trace("Starting classfile: " . classfile)
         call s:System("java -Xmx512m -cp " . classfile . " com.martiansoftware.nailgun.NGServer " . g:nailgun_port . " &", "Complete")
