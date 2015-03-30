@@ -113,8 +113,8 @@ endif
 if !exists("g:javacomplete_methods_paren")
 	let g:javacomplete_methods_paren = 1    " add paren after method name
 endif
-if !exists("g:javacomplete_methods_paren_noargs_close")
-	let g:javacomplete_methods_paren_noargs_close = 0    " close paren when there are no arguments
+if !exists("g:javacomplete_methods_paren_close_noargs")
+	let g:javacomplete_methods_paren_close_noargs = 0    " close paren when there are no arguments
 endif
 
 " FindStart function for completion {{{1
@@ -410,12 +410,6 @@ function! javacomplete#StartServer()
         if !exists("g:nailgun_port")
             echoerr "javacomplete error: g:nailgun_port hasn't been set"
         endif
-
-        augroup javacomplete
-            autocmd!
-            autocmd! javacomplete VimLeave * call javacomplete#StopServer()
-            autocmd! javacomplete BufWritePost *.java call javacomplete#ReindexFile()
-        augroup END
 
         let classfile = globpath(&rtp, 'java/target/java_vim_sense-1.0-jar-with-dependencies.jar')
         call s:Trace("Starting classfile: " . classfile)
@@ -2887,7 +2881,7 @@ fu! s:DoGetMethodList(methods, ...)
     let s = ''
     for method in a:methods
         let close_paren = ''
-        if g:javacomplete_methods_paren_noargs_close && method.d =~ '()$'
+        if g:javacomplete_methods_paren_close_noargs && method.d =~ '()$'
             let close_paren = ')'
         endif
         let s .= "{'kind':'" . (s:IsStatic(method.m) ? "M" : "m") . "','word':'" . method.n . paren . close_paren . "','abbr':'" . method.n . "()','menu':'" . method.d . "','dup':'1'},"
