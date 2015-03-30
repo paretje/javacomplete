@@ -114,7 +114,7 @@ if !exists("g:javacomplete_methods_paren")
 	let g:javacomplete_methods_paren = 1    " add paren after method name
 endif
 if !exists("g:javacomplete_methods_paren_noargs_close")
-	let g:javacomplete_methods_paren_noargs_close = 1    " close paren when there are no arguments
+	let g:javacomplete_methods_paren_noargs_close = 0    " close paren when there are no arguments
 endif
 
 " FindStart function for completion {{{1
