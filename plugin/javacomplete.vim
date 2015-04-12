@@ -2,10 +2,6 @@ if exists('g:loaded_javacompleteplugin')
   finish
 endif
 
-if !exists('g:javacomplete_stop_nailgun')
-  let g:javacomplete_stop_nailgun = 1
-endif
-
 function! s:initialize()
   command! -bang -narg=0 JavaCompleteReindexAll call javacomplete#ReindexAllSources()
   command! -bang -narg=0 JavaCompleteReindexFile call javacomplete#ReindexFile()
@@ -18,14 +14,6 @@ function! s:initialize()
   command! -range -bang -narg=0 JavaCompleteSortImports :<line1>,<line2>call javacomplete#SortImports()
   command! -bang -narg=1 -complete=file JavaCompleteAddSourcePath call javacomplete#AddSourcePath(<q-args>) | JavaCompleteReinitialize
   command! -bang -narg=1 -complete=file JavaCompleteAddClassPath call javacomplete#AddClassPath(<q-args>) | JavaCompleteReinitialize
-
-  augroup javacomplete
-    autocmd!
-    if g:javacomplete_stop_nailgun
-      autocmd! javacomplete VimLeave * call javacomplete#StopServer()
-    endif
-    autocmd! javacomplete BufWritePost *.java call javacomplete#ReindexFile()
-  augroup END
 endfunction
 
 call s:initialize()

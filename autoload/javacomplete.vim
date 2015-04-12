@@ -116,6 +116,9 @@ endif
 if !exists("g:javacomplete_methods_paren_close_noargs")
 	let g:javacomplete_methods_paren_close_noargs = 0    " close paren when there are no arguments
 endif
+if !exists('g:javacomplete_stop_nailgun')
+  let g:javacomplete_stop_nailgun = 1
+endif
 
 " FindStart function for completion {{{1
 function! s:FindStart()
@@ -410,6 +413,14 @@ function! javacomplete#StartServer()
         if !exists("g:nailgun_port")
             echoerr "javacomplete error: g:nailgun_port hasn't been set"
         endif
+
+        augroup javacomplete
+            autocmd!
+            if g:javacomplete_stop_nailgun
+                autocmd! javacomplete VimLeave * call javacomplete#StopServer()
+            endif
+            autocmd! javacomplete BufWritePost *.java call javacomplete#ReindexFile()
+        augroup END
 
         let classfile = globpath(&rtp, 'java/target/java_vim_sense-1.0-jar-with-dependencies.jar')
         call s:Trace("Starting classfile: " . classfile)
